@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block controller %}NoCtrl{% endblock %}
+{% block base_body %}
+
+<md-content layout="column" layout-align="space-around center" class="md-padding">
+	<md-card layout-margin layout-fill layout-padding width-limit>
+		<md-card-content>
+			<h2 class="md-title">Uh-Oh</h2>
+			<p>This a 404 error. It seems the URL you tried to access does not exists in this website. Maybe it already expired, maybe it didn't get created yet.</p>
+		</md-card-content>
+		<div class="md-actions" layout="row" layout-align="end center">
+		        <md-button class="md-primary" ng-href="/">Go to main page</md-button>
+		      </div>
+	</md-card>
+</md-content>
+
+
+{% endblock %}

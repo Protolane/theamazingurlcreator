@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block controller %}AppCtrl{% endblock %}
+
+{% block base_body %}
+			<md-tabs class="md-accent" flex md-align-tabs="top">
+		      <md-tab>
+		        <md-tab-label>Create</md-tab-label>
+		        <md-tab-body>
+		<md-content layout="column" layout-align="space-around center" class="md-padding" ng-switch="step">
+		          <md-card layout-margin layout-fill layout-padding width-limit ng-switch-when="0">
+		      <md-card-content>
+		        <h2 class="md-title">Create your URL</h2>
+		        
+		        	<md-input-container flex>
+				        <label>Paste your URL here</label>
+				        <input ng-model="url.target" ng-disabled="feedback">
+				      </md-input-container>
+				      
+					      <h2 class="md-title">Type:</h2>
+					      <md-radio-group ng-model="url.type" ng-disabled="feedback">
+							      <md-radio-button value="0" class="md-primary" ng-click="generateExamples()">Random sentence</md-radio-button>
+							      <md-radio-button value="1" class="md-primary" ng-click="generateExamples()">Short URL</md-radio-button>
+							      <md-radio-button value="2" class="md-primary" ng-click="generateExamples()">Random URL</md-radio-button>
+							      <md-radio-button value="3" class="md-primary" ng-click="generateExamples()">Very long random URL</md-radio-button>
+							      
+							      <span class="greyed">Click again to see more examples</span>
+					    </md-radio-group>
+				    <div>
+				    	<h2 class="md-title">Example:</h2>
+				    	<span ng-switch="url.type">
+				    		<p ng-switch-when="0" class="greyed">{[ baseUrl ]}/{[ examples.sentence ]}</p>
+				    		<p ng-switch-when="1" class="greyed">{[ baseUrl ]}/{[ examples.short ]}</p>
+				    		<p ng-switch-when="2" class="greyed">{[ baseUrl ]}/{[ examples.regular ]}</p>
+				    		<p ng-switch-when="3" class="greyed">{[ baseUrl ]}/{[ examples.veryLong ]}</p>
+				    	</span>
+				    </div>
+		      </md-card-content>
+		      <div class="md-actions" layout="row" layout-align="end center">
+		        <md-button class="md-primary" ng-click="createUrl()" ng-disabled="feedback">Create URL</md-button>
+		      </div>
+		      <md-progress-linear md-mode="indeterminate" ng-show="feedback"></md-progress-linear>
+		    </md-card>
+		    
+		    <md-card layout-margin layout-fill layout-padding width-limit ng-switch-when="1">
+		    	<md-card-content>
+		    		<h2 class="md-title">Created!</h2>
+		    		<p>Here's your very own URL. Copy it to the clipboard by pressing <kbd>Ctrl</kbd>-<kbd>C</kbd> or <kbd><img src="{%static 'images/command.png' %}"/></kbd>-<kbd>C</kbd>.</p>
+		    		
+		    		<md-input-container flex>
+				        <input id="generated" ng-model="created.target" aria-label="Generated link">
+				      </md-input-container>
+				      
+				      <div id="shareplace" layout="row" layout-align="space-around center"><!-- Social media share buttons will be dynamically added here --></div>
+				      
+				      <p>Please be aware that every URL will expire after 90 days of inactivity.</p>
+		    	</md-card-content>
+		    </md-card>
+		    
+		    <md-card layout-margin layout-fill layout-padding width-limit ng-switch-when="2"> <!-- error message -->
+		    
+		    	<md-card-content>
+		    		<h2 class="md-title">Uh-oh!</h2>
+		    		<p>Something went wrong. This is the error message:</p>
+		    		<p class="greyed">{[ error ]}</p>
+		    		<br/>
+		    		<p>Did you try to create a link to a localhost address or to another TaUc! URL? This might be the reason.</p>
+		    		<p>Otherwise, please send us a feedback at <a target="_blank" href="mailto:tauc.link@gmail.com">tauc.link@gmail.com</a> with the target URL included, and we'll try to solve the problem as soon as possible.</p> 
+		    	</md-card-content>
+		    	<div class="md-actions" layout="row" layout-align="end center">
+		        <md-button class="md-primary" ng-href="/">Back</md-button>
+		      </div>
+		    </md-card>
+		    
+		    <md-card class="advertisement" layout-margin layout-fill layout-padding width-limit>
+		    <md-card-content>
+		    	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+					<!-- TaUc: URL redirecting, 20 seconds wait FULL PAGE -->
+					<ins class="adsbygoogle"
+					     style="display:block"
+					     data-ad-client="ca-pub-0894650404623599"
+					     data-ad-slot="9403055583"
+					     data-ad-format="auto"></ins>
+					<script>
+					(adsbygoogle = window.adsbygoogle || []).push({});
+				</script>
+		    </md-card-content>
+		    </md-card>
+		    
+		    <md-card class="unselectable" layout-margin layout-fill layout-padding width-limit>
+		    <md-card-content ng-controller="LastURLsCtrl">
+		    <h2 class="md-title">Latest URLs</h2>
+		    	<div style="text-align: center;">
+			    <md-button class="md-primary md-raised {[ tile.hue ]}" style="max-width: 32%; text-overflow: ellipsis;" target="_blank" ng-repeat="tile in urls" ng-href="{[ baseUrl ]}/{[ tile.identifier ]}">
+			      {[ tile.target ]}
+			    </md-button>
+		    	</div>
+			  </md-card-content>
+		    </md-card>
+		          </md-content>
+		          
+		          
+		        </md-tab-body>
+		      </md-tab>
+		      <md-tab>
+		        <md-tab-label>About</md-tab-label>
+		        <md-tab-body>
+
+					<md-content layout="column" layout-align="space-around center" class="md-padding">
+					
+						<md-card layout-margin layout-fill layout-padding width-limit>
+						 <md-card-content>
+						 	<h2 class="md-title">About us</h2>
+						 	<p>TaUc! creates unique URL redirections for you with random sentences, unique id or even suspicious-looking URLs. It is a URL shortener and a URL enlarger. Make your URL the way you want!</p>
+						 	<p>I am Bruno Finger, 25 years old, full-time web developer, Linux user. I am Brazilian and I live in Poland. I have a 1 year old daughter and an amazing woman by my side in this journey. Together we are a happy family.</p>
+						 	
+						 	<div style="text-align: center; height: 330px">
+						 		<md-button class="md-fab" style="width: 300px; height: 300px" aria-label="Me and my family">
+							      <md-icon style="width: 300px; height: 300px; background: url('{% static 'images/family.jpg' %}'); background-position: center center; background-size: 160%;"></md-icon>
+							      <md-tooltip md-visible="true">Me and my family</md-tooltip>
+							    </md-button>
+						 	</div>
+						 	
+						 	<p>I believe we can use our hands to make this place a better world. I'm trying to develop tools to make our Internet a more pleasant place. Of course, there are another tools that might just do the same out there, but maybe not with some sense of humor, and hey, why not give a chance to a new one? Who knows what the future holds for it? ;)</p>
+						 	
+						 	<p>If you like a lot this website, you can consider buying me a beer ;) No but seriously, you can donate us any amount that you'd like, or not :) Feel free and enjoy the place.</p>
+						 	
+						 	<div style="text-align: center;">
+						        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="ng-pristine ng-valid">
+									<input type="hidden" name="cmd" value="_donations">
+									<input type="hidden" name="business" value="bruno.finger@wp.pl">
+									<input type="hidden" name="lc" value="GB">
+									<input type="hidden" name="item_name" value="TaUc! donation">
+									<input type="hidden" name="no_note" value="0">
+									<input type="hidden" name="currency_code" value="USD">
+									<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG_global.gif:NonHostedGuest">
+									<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG_global.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
+									<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+								</form>
+							</div>
+						 	
+						 	<h2 class="md-title">Contact and feedback</h2>
+						 	<p>If you find any problems or would like to send us some feedback, feel free to send an e-mail at <a target="_blank" href="mailto:tauc.link@gmail.com">tauc.link@gmail.com</a> (we will get a better address as soon as possible ;D).</p>
+						 	
+						 	<h2 class="md-title">Technologies</h2>
+						 	<md-list>
+							  <md-subheader class="md-no-sticky">This site is built using the following technologies:</md-subheader>
+							  <md-list-item class="md-2-line">
+							    <div class="md-list-item-text">
+								  	<h3><a href="https://angularjs.org" target="_blank">AngularJS</a></h3>
+								    <p>Amazing JavaScript framework by Google.</p>
+								</div>
+							  </md-list-item>
+							   <md-divider></md-divider>
+							   <md-list-item class="md-2-line">
+							    <div class="md-list-item-text">
+								  	<h3><a href="http://www.google.com/design/spec/material-design/introduction.html" target="_blank">Material Design</a> for <a href="https://material.angularjs.org" target="_blank">AngularJS</a></h3>
+								    <p>Simple and modern user interface that feels natural, by Google.</p>
+								</div>
+							  </md-list-item>
+							   <md-divider></md-divider>
+							   <md-list-item class="md-2-line">
+							    <div class="md-list-item-text">
+								  	<h3><a href="https://www.google.com/fonts" target="_blank">Google Fonts</a></h3>
+								    <p>With web fonts it's possible make a page look the same on any device and operating system.</p>
+								</div>
+							  </md-list-item>
+							   <md-divider></md-divider>
+							   <md-list-item class="md-2-line">
+							    <div class="md-list-item-text">
+								  	<h3><a href="https://www.python.org/" target="_blank">Python 3.4</a>/<a href="https://www.djangoproject.com/" target="_blank">Django 1.8</a></h3>
+								    <p>Python is very powerful open-source scripting language. Django is an even more powerful web framework built on that language.</p>
+								</div>
+							  </md-list-item>
+							   <md-divider></md-divider>
+							   <md-list-item class="md-2-line">
+							    <div class="md-list-item-text">
+								  	<h3><a href="https://cloud.google.com/compute/" target="_blank">Google Compute Engine</a></h3>
+								    <p>Virtual machine hosted by Google running <a href="http://www.ubuntu.com/" target="_blank">Ubuntu Server</a>.</p>
+								</div>
+							  </md-list-item>
+							</md-list>
+							
+							<h2 class="md-title">Credits</h2>
+						 	<md-list>
+							  <md-subheader class="md-no-sticky">These resources deserves proper credits:</md-subheader>
+							  <md-list-item class="md-3-line">
+							  	<img src="{% static 'images/command.png' %}" class="md-avatar" alt="Mac OS Command icon" />
+							    <div class="md-list-item-text">
+								  	<h3>Mac OS Command icon</h3>
+								  	<h4>License: Public domain</h4>
+								    <p>Modified. Original source: <a href="https://commons.wikimedia.org/wiki/File:Command_key.svg" target="_blank">Wikimedia Commoms</a></p>
+								</div>
+							  </md-list-item>
+							   <md-divider></md-divider>
+							   
+							   <md-list-item class="md-3-line">
+							  	<img src="{% static 'images/creepy-157657_640.png' %}" class="md-avatar" alt="Our creeper" />
+							    <div class="md-list-item-text">
+								  	<h3>Our creeper. If you use AdBlock, I believe you've met him.</h3>
+								  	<h4>License: Public domain</h4>
+								    <p>Modified. Original source: <a href="https://pixabay.com/p-157657/" target="_blank">Pixabay</a></p>
+								</div>
+							  </md-list-item>
+							   <md-divider></md-divider>
+							   
+							   
+							   <md-list-item class="md-3-line">
+							  	<img src="{% static 'images/scarybg.jpg' %}" class="md-avatar" alt="Our creeper" />
+							    <div class="md-list-item-text">
+								  	<h3>Part of the creeper's environment.</h3>
+								  	<h4>License: Public domain</h4>
+								    <p>Modified. Original source: <a href="http://ashensorrow.deviantart.com/art/D-Hill-Texture-Stock-202353169" target="_blank">redwolf518stock's DeviantArt</a></p>
+								</div>
+							  </md-list-item>
+							   <md-divider></md-divider>
+							   
+							   <md-list-item class="md-3-line">
+							    <div class="md-list-item-text">
+								  	<h3>The background music playing when using AdBlock</h3>
+								  	<h4>License: Creative Commons - Track name: Deep Horrors - Author: Kevin MacLeod</h4>
+								    <p>Not modified. Original source: <a href="https://www.youtube.com/audiolibrary/music" target="_blank">YouTube audio library</a></p>
+								</div>
+							  </md-list-item>
+							   
+							</md-list>
+						 	
+						 </md-card-card-content>
+						</md-card>
+					</md-content>		        
+		        
+		        </md-tab-body>
+		      </md-tab>
+		    </md-tabs>
+{% endblock %}

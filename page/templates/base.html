@@ -1,0 +1,78 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    
+    <meta name="author" content="Bruno Finger - bruno.finger12@gmail.com" />
+    
+    <title>TaUc: The amazing URL creator!</title>
+    
+    
+    <meta name="Description" content="Create URL redirections with random sentences, unique id or even suspicious-looking URLs. It is a URL shortener and a URL enlarger.">
+    <meta name="referrer" content="origin">
+    
+    <meta property="og:title" content="The amazing URL creator">
+    <meta property="og:description" content="Create URL redirections with random sentences, unique id or even suspicious-looking URLs. It is a URL shortener and a URL enlarger.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://tauc.link">
+    <meta property="og:image" content="{% static 'images/logo.png' %}">
+    
+    <link rel="image_src" href="{% static 'images/logo.png' %}" />
+    <meta property="og:site_name" content="The amazing URL creator!" />
+    <meta property="fb:admins" content="760729527316526" />
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js" defer></script>
+    <script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js" defer></script>
+	<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js" defer></script>
+    
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+	
+    <script src="{% static 'js/App.js' %}" type="application/javascript" defer></script>
+    <link href="{% static 'style/main.css'  %}" rel='stylesheet' type='text/css'>
+    
+    <!-- Google Analytics -->
+    <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  ga('create', 'UA-38032936-4', 'auto');
+	  ga('send', 'pageview');
+	</script>
+    
+	{% block base_head %}{% endblock %}
+</head>
+	<body ng-app="uurl" layout="column" ng-controller="{% block controller %}{% endblock %}" md-theme="{[ theme ]}" md-theme-watch flex>
+	<div ng-show="false" style="position: absolute;
+    	bottom: calc(100% / 2);
+    	left: 0px;
+    	width: 100%;
+    	text-align: center;">
+    	<p>TaUc! is loading, please wait</p>
+	</div>
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+<md-toolbar layout="row">
+<div class="md-toolbar-tools">
+	{% block base_pagetitle %}<h1 hide show-gt-lg>The amazing URL creator!</h1><h1 title="The amazing URL creator!" hide-gt-lg>TaUc!</h1>{% endblock %}
+	{% block base_centertext %}{% endblock %}
+	<span flex></span>
+	{% block base_secondarytitle %}<h5 hide-sm>Don't like the colors? Try to refresh the page!</h5>{% endblock %}
+</div>
+</md-toolbar>
+		{% block base_body %}{% endblock %}
+		
+	</body>
+</html>
